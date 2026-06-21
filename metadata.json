@@ -1,0 +1,6 @@
+{
+  "name": "Cultura Shroom",
+  "description": "Comunidade cultural, artística e musical inspirada na liberdade, na trance music, na natureza, no humor e na desconstrução de pressões sociais.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
