@@ -72,13 +72,13 @@ export default function NomenclaturaSection() {
       {/* Glossário: 7/12 */}
       <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
 
-        {/* Tabs de termos */}
-        <div className="flex flex-wrap gap-2">
+        {/* Tabs de termos — scroll horizontal em mobile */}
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin -mx-1 px-1">
           {NOMENCLATURAS_DATA.map((item) => (
             <button
               key={item.term}
               onClick={() => setSelectedTerm(item.term)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium tracking-wide transition-all duration-300 border font-display ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium tracking-wide transition-all duration-300 border font-display shrink-0 ${
                 selectedTerm === item.term
                   ? 'bg-shroom-green/15 text-shroom-lightgreen border-shroom-green/50 shadow-lg font-semibold'
                   : 'bg-shroom-deep/45 text-shroom-cream/50 border-white/5 hover:bg-shroom-deep/80 hover:text-shroom-cream/80'

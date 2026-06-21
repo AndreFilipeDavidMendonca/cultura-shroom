@@ -146,7 +146,7 @@ export default function CogumeloSection() {
           <p className="text-xs md:text-sm text-shroom-cream/70 leading-relaxed font-sans">
             {COGUMELO_SECTION.effectsNote}
           </p>
-          <div className="grid grid-cols-2 gap-1.5 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
             {COGUMELO_SECTION.possibleEffects.map((e, i) => (
               <div key={i} className="flex items-start gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-shroom-green/60 mt-1.5 shrink-0" />
