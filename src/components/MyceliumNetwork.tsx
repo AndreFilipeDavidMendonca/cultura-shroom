@@ -206,7 +206,7 @@ export default function MyceliumNetwork() {
   };
 
   return (
-    <div id="mycelium-root" ref={containerRef} className="relative w-full rounded-2xl overflow-hidden shadow-2xl bg-shroom-deep border border-shroom-green/20">
+    <div id="mycelium-root" ref={containerRef} className="relative w-full rounded-[1.75rem] overflow-hidden shadow-2xl bg-shroom-deep border border-shroom-gold/20">
       
       {/* Decorative Forest Gradients */}
       <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none bg-radial-gradient from-transparent via-transparent to-shroom-dark/90" />
