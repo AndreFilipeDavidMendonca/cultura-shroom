@@ -5,50 +5,81 @@
 
 import { useState } from 'react';
 import { NOMENCLATURAS_DATA } from '../data';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../i18n/translations';
 import { BookOpen, RefreshCw, Zap, CheckCircle } from 'lucide-react';
 
 export default function NomenclaturaSection() {
-  const [selectedTerm, setSelectedTerm] = useState(NOMENCLATURAS_DATA[0].term);
-  const [inputText, setInputText] = useState("");
-  const [shroomifiedText, setShroomifiedText] = useState("");
+  const { lang } = useLanguage();
+  const t = translations[lang].glossario;
 
-  const activeData = NOMENCLATURAS_DATA.find(n => n.term === selectedTerm) || NOMENCLATURAS_DATA[0];
+  // Combina dados estruturais (term, vibeColor) com definições traduzidas
+  const displayData = NOMENCLATURAS_DATA.map((n, i) => ({
+    ...n,
+    definition: t.data[i]?.definition ?? n.definition,
+  }));
+
+  const [selectedTerm, setSelectedTerm] = useState(displayData[0].term);
+  const [inputText, setInputText] = useState('');
+  const [shroomifiedText, setShroomifiedText] = useState('');
+
+  const activeData = displayData.find(n => n.term === selectedTerm) || displayData[0];
 
   const handleShroomify = () => {
     if (!inputText.trim()) {
-      setShroomifiedText("Escreve alguma coisa para o micélio traduzir!");
+      setShroomifiedText(t.shroomifier.emptyInput);
       return;
     }
 
     let text = inputText.toLowerCase();
 
-    text = text
-      .replace(/(fim de semana|fds|fim-de-semana)/g, "Shroomkend 🍄")
-      .replace(/(democracia|votação|governo|coletivo|organização)/g, "Shroomocracia 🌿")
-      .replace(/(caos|loucura|festa rija|celebração)/g, "Shroomageddon 🔥")
-      .replace(/(pista de dança|pista|chão|dancefloor)/g, "Shroomfloor 🎶")
-      .replace(/(lugar|parque|natureza|festival|espaço)/g, "Shroomland 🌲")
-      .replace(/(pessoa|participante|amigo|gajo|moça|anónimo)/g, "Shroomanónimo 🕊️")
-      .replace(/(cogumelos|cogumelo)/g, "Shrooms 🍄")
-      .replace(/(liberdade|livre)/g, "liberdade radical ✨")
-      .replace(/(música|som|ritmo|trance)/g, "Trance Cósmico 🎶")
-      .replace(/(conversar|falar)/g, "trocar esporos 💬")
-      .replace(/(triste|aborrecido|trabalho|stresso|stress)/g, "vazio consumista 🛒")
-      .replace(/(bar|balcão|cerveja|bebida)/g, "Shroombar 🌿")
-      .replace(/(perdido|confuso|baralhou)/g, "shroomalhado 🌀")
-      .replace(/(animado|energia|entusiasmado)/g, "Shroom Animado 🔥")
-      .replace(/(preço|custo|tabela)/g, "Shroomçário 📋")
-      .replace(/(comunidade|grupo|clã|tribo)/g, "Shroomunidade 🍄");
+    if (lang === 'pt') {
+      text = text
+        .replace(/(fim de semana|fds|fim-de-semana)/g, 'Shroomkend 🍄')
+        .replace(/(democracia|votação|governo|coletivo|organização)/g, 'Shroomocracia 🌿')
+        .replace(/(caos|loucura|festa rija|celebração)/g, 'Shroomageddon 🔥')
+        .replace(/(pista de dança|pista|chão|dancefloor)/g, 'Shroomfloor 🎶')
+        .replace(/(lugar|parque|natureza|festival|espaço)/g, 'Shroomland 🌲')
+        .replace(/(pessoa|participante|amigo|gajo|moça|anónimo)/g, 'Shroomanónimo 🕊️')
+        .replace(/(cogumelos|cogumelo)/g, 'Shrooms 🍄')
+        .replace(/(liberdade|livre)/g, 'liberdade radical ✨')
+        .replace(/(música|som|ritmo|trance)/g, 'Trance Cósmico 🎶')
+        .replace(/(conversar|falar)/g, 'trocar esporos 💬')
+        .replace(/(triste|aborrecido|trabalho|stresso|stress)/g, 'vazio consumista 🛒')
+        .replace(/(bar|balcão|cerveja|bebida)/g, 'Shroombar 🌿')
+        .replace(/(perdido|confuso|baralhou)/g, 'shroomalhado 🌀')
+        .replace(/(animado|energia|entusiasmado)/g, 'Shroom Animado 🔥')
+        .replace(/(preço|custo|tabela)/g, 'Shroomçário 📋')
+        .replace(/(comunidade|grupo|clã|tribo)/g, 'Shroomunidade 🍄');
+    } else {
+      text = text
+        .replace(/(weekends|weekend)/g, 'Shroomkend 🍄')
+        .replace(/(democracy|vote|voting|collective|organization)/g, 'Shroomocracia 🌿')
+        .replace(/(chaos|madness|party|celebration|rave)/g, 'Shroomageddon 🔥')
+        .replace(/(dancefloor|dance floor|floor|stage)/g, 'Shroomfloor 🎶')
+        .replace(/(place|park|nature|festival|space)/g, 'Shroomland 🌲')
+        .replace(/(person|participant|friend|guy|girl|anonymous)/g, 'Shroomanónimo 🕊️')
+        .replace(/(mushrooms|mushroom)/g, 'Shrooms 🍄')
+        .replace(/(freedom|free)/g, 'radical freedom ✨')
+        .replace(/(music|sound|rhythm|trance)/g, 'Cosmic Trance 🎶')
+        .replace(/(talk|speak|chat)/g, 'exchange spores 💬')
+        .replace(/(sad|bored|work|stress|stressed)/g, 'consumerist void 🛒')
+        .replace(/(bar|counter|beer|drink|drinks)/g, 'Shroombar 🌿')
+        .replace(/(lost|confused)/g, 'shroomalhado 🌀')
+        .replace(/(energetic|excited|hyped|enthusiastic)/g, 'Shroom Animado 🔥')
+        .replace(/(price|cost|list)/g, 'Shroomçário 📋')
+        .replace(/(community|group|clan|tribe)/g, 'Shroomunidade 🍄');
+    }
 
-    const words = text.split(" ");
+    const words = text.split(' ');
     const processedWords = words.map((word, idx) => {
-      if (word.length > 5 && !word.includes("shroom") && idx % 4 === 0) {
+      if (word.length > 5 && !word.toLowerCase().includes('shroom') && idx % 4 === 0) {
         return `shroom-${word}`;
       }
       return word;
     });
 
-    let result = processedWords.join(" ");
+    let result = processedWords.join(' ');
     result = result.charAt(0).toUpperCase() + result.slice(1);
     setShroomifiedText(result);
   };
@@ -74,7 +105,7 @@ export default function NomenclaturaSection() {
 
         {/* Tabs de termos — scroll horizontal em mobile */}
         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin -mx-1 px-1">
-          {NOMENCLATURAS_DATA.map((item) => (
+          {displayData.map((item) => (
             <button
               key={item.term}
               onClick={() => setSelectedTerm(item.term)}
@@ -95,7 +126,7 @@ export default function NomenclaturaSection() {
 
           <div className="mb-4">
             <span className="text-[10px] font-mono tracking-widest text-shroom-sand font-bold uppercase bg-shroom-dark/50 px-2 py-1 rounded">
-              Vocabulário Shroom
+              {t.vocabLabel}
             </span>
           </div>
 
@@ -109,7 +140,7 @@ export default function NomenclaturaSection() {
 
           <div className="mt-5 pt-4 border-t border-white/5 flex items-center gap-2 text-xs font-mono text-shroom-sand">
             <CheckCircle className="w-4 h-4 text-shroom-lightgreen" />
-            <span>Símbolo de convivência, humor e ligação orgânica.</span>
+            <span>{t.cardFooter}</span>
           </div>
         </div>
 
@@ -124,18 +155,18 @@ export default function NomenclaturaSection() {
             <div className="flex items-center gap-2.5 mb-3">
               <BookOpen className="w-5 h-5 text-shroom-gold" />
               <h4 className="text-lg font-bold font-display tracking-wide text-shroom-cream">
-                O Shroomificador
+                {t.shroomifier.title}
               </h4>
             </div>
 
             <p className="text-xs text-shroom-cream/50 leading-relaxed mb-4">
-              Os Shrooms traduzem palavras cansadas da pressão social contemporânea para o dialeto leve, livre e comunitário de Shroomland.
+              {t.shroomifier.description}
             </p>
 
             <textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Ex: No fim de semana quero libertar-me do stresso, ir para a natureza ouvir música e dançar na pista!"
+              placeholder={t.shroomifier.placeholder}
               className="w-full h-24 bg-shroom-dark px-4 py-3 rounded-xl border border-white/5 text-sm placeholder-shroom-cream/30 focus:outline-none focus:border-shroom-green/40 font-sans resize-none text-shroom-cream"
             />
           </div>
@@ -146,17 +177,17 @@ export default function NomenclaturaSection() {
               className="w-full py-2.5 bg-gradient-to-r from-shroom-moss to-shroom-green text-shroom-cream font-semibold text-xs md:text-sm tracking-wide rounded-xl hover:from-shroom-green hover:to-shroom-lightgreen hover:text-shroom-dark hover:shadow-lg active:scale-98 transition-all flex items-center justify-center gap-2"
             >
               <RefreshCw className="w-4 h-4 animate-spin-slow" />
-              Traduzir para Shroomland
+              {t.shroomifier.translateBtn}
             </button>
           </div>
 
           <div className="bg-shroom-dark/80 px-4 py-3.5 rounded-xl border border-white/5 min-h-[90px] flex flex-col justify-between">
             <div className="flex items-center gap-1 mb-2">
               <Zap className="text-shroom-amber w-3.5 h-3.5" />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-shroom-sand">Transmissão do Micélio:</span>
+              <span className="text-[10px] font-mono uppercase tracking-widest text-shroom-sand">{t.shroomifier.transmissionLabel}</span>
             </div>
             <p className="text-xs md:text-sm text-shroom-cream/90 font-sans italic leading-relaxed min-h-[40px]">
-              {shroomifiedText || <span className="text-shroom-cream/30 italic">Aguarda codificação do micélio subterrâneo…</span>}
+              {shroomifiedText || <span className="text-shroom-cream/30 italic">{t.shroomifier.emptyOutput}</span>}
             </p>
           </div>
 

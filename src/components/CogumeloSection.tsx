@@ -5,11 +5,13 @@
 
 import { useState } from 'react';
 import { AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import { COGUMELO_SECTION, COGUMELOS_PSILOCIBINOS, RatingLevel, CogumelhoPsilocibino } from '../data';
+import { COGUMELOS_PSILOCIBINOS, RatingLevel, CogumelhoPsilocibino } from '../data';
+import { useLanguage } from '../contexts/LanguageContext';
+import { translations } from '../i18n/translations';
 import { Mushroom, SectionTag } from './Decor';
 import { BookOpen, Sprout } from 'lucide-react';
 
-// ─── Cores por nível de intensidade ─────────────────────────────
+// ─── Cores por nível de intensidade (chaves internas em PT) ──────────────────
 const RATING_STYLE: Record<RatingLevel, { text: string; bg: string; border: string; dot: string }> = {
   'Baixo':         { text: 'text-shroom-lightgreen/90', bg: 'bg-shroom-green/10',    border: 'border-shroom-green/20',  dot: 'bg-shroom-green/50' },
   'Baixo a Médio': { text: 'text-shroom-lightgreen',    bg: 'bg-shroom-green/15',    border: 'border-shroom-green/30',  dot: 'bg-shroom-green/70' },
@@ -21,34 +23,35 @@ const RATING_STYLE: Record<RatingLevel, { text: string; bg: string; border: stri
 };
 
 function RatingBadge({ value }: { value: RatingLevel }) {
+  const { lang } = useLanguage();
+  const display = translations[lang].ratingDisplay[value];
   const s = RATING_STYLE[value];
   return (
     <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-medium ${s.bg} ${s.text} border ${s.border}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-      {value}
+      {display}
     </span>
   );
 }
 
-const EXP_LABELS: { key: keyof CogumelhoPsilocibino['experience']; label: string }[] = [
-  { key: 'visual',        label: 'Visual' },
-  { key: 'musical',       label: 'Música / Auditivo' },
-  { key: 'social',        label: 'Riso / Social' },
-  { key: 'reflexivo',     label: 'Reflexivo' },
-  { key: 'energetico',    label: 'Energético' },
-  { key: 'introspectivo', label: 'Introspectivo' },
-];
+interface MushroomCardProps {
+  m: CogumelhoPsilocibino;
+  profile: string;
+  description: string;
+  care: string;
+  expandMore: string;
+  expandLess: string;
+  expLabels: { key: string; label: string }[];
+}
 
-function MushroomCard({ m }: { m: CogumelhoPsilocibino }) {
+function MushroomCard({ m, profile, description, care, expandMore, expandLess, expLabels }: MushroomCardProps) {
   const [expanded, setExpanded] = useState(false);
   return (
     <div className="organic-card glass border border-shroom-green/10 hover:border-shroom-gold/25 transition-all duration-500 overflow-hidden flex flex-col group">
-      {/* topo colorido */}
       <div className="h-1 w-full bg-gradient-to-r from-shroom-moss via-shroom-green to-shroom-lightgreen opacity-70" />
 
       <div className="p-5 md:p-6 flex flex-col gap-4 flex-1">
 
-        {/* Cabeçalho do card */}
         <div className="flex items-start gap-4">
           <div className="shrink-0">
             <Mushroom className="w-14 h-16 drop-shadow-md group-hover:scale-105 transition-transform duration-500" capColor={m.capColor} />
@@ -66,40 +69,37 @@ function MushroomCard({ m }: { m: CogumelhoPsilocibino }) {
           </div>
         </div>
 
-        {/* Perfil */}
         <p className="text-xs text-shroom-cream/65 leading-relaxed font-sans font-light">
-          {m.profile}
+          {profile}
         </p>
 
-        {/* Ratings */}
         <div className="space-y-1.5 border-t border-shroom-green/10 pt-3">
-          {EXP_LABELS.map(({ key, label }) => (
+          {expLabels.map(({ key, label }) => (
             <div key={key} className="flex items-center justify-between gap-2 min-w-0">
               <span className="text-[9px] md:text-[10px] font-mono text-shroom-cream/45 uppercase tracking-[0.08em] shrink-0 truncate max-w-[110px]">
                 {label}
               </span>
-              <RatingBadge value={m.experience[key]} />
+              <RatingBadge value={m.experience[key as keyof CogumelhoPsilocibino['experience']]} />
             </div>
           ))}
         </div>
 
-        {/* Descrição expandível */}
         <div>
           <button
             onClick={() => setExpanded(!expanded)}
             className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.15em] text-shroom-lightgreen/70 hover:text-shroom-lightgreen transition-colors"
           >
             {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-            {expanded ? 'Menos' : 'Saber mais'}
+            {expanded ? expandLess : expandMore}
           </button>
           {expanded && (
             <div className="mt-3 space-y-3 border-t border-shroom-green/10 pt-3">
               <p className="text-xs text-shroom-cream/70 leading-relaxed font-sans">
-                {m.description}
+                {description}
               </p>
               <div className="p-3 rounded-xl bg-shroom-earth/10 border border-shroom-earth/20">
                 <p className="text-[11px] font-serif italic text-shroom-clay/90 leading-relaxed">
-                  {m.care}
+                  {care}
                 </p>
               </div>
             </div>
@@ -112,42 +112,49 @@ function MushroomCard({ m }: { m: CogumelhoPsilocibino }) {
 }
 
 export default function CogumeloSection() {
+  const { lang } = useLanguage();
+  const t = translations[lang].cogumelo;
+
+  // Combina dados estruturais com textos traduzidos
+  const mushrooms = COGUMELOS_PSILOCIBINOS.map((m, i) => ({
+    ...m,
+    ...t.mushroomsData[i],
+  }));
+
   return (
     <>
       {/* Cabeçalho */}
       <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14 space-y-3">
         <SectionTag>
           <BookOpen className="w-3.5 h-3.5" />
-          Conhecimento Cultural
+          {t.sectionTag}
         </SectionTag>
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic text-shroom-cream tracking-wide leading-tight">
-          Escolhe um Cogumelo
+          {t.title}
         </h2>
       </div>
 
-      {/* Intro + efeitos possíveis — 2 colunas em desktop */}
+      {/* Intro + efeitos possíveis */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 md:mb-16">
 
-        {/* Texto introdutório */}
         <div className="space-y-4">
-          {COGUMELO_SECTION.intro.map((p, i) => (
+          {t.intro.map((p, i) => (
             <p key={i} className="text-sm md:text-base text-shroom-cream/75 font-light leading-relaxed font-sans">
               {p}
             </p>
           ))}
         </div>
 
-        {/* Nota geral + lista de efeitos */}
         <div className="p-5 md:p-6 organic-card glass border border-shroom-green/12 space-y-4">
           <div className="flex items-center gap-2 mb-1">
             <Sprout className="w-4 h-4 text-shroom-green shrink-0" />
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-shroom-lightgreen">Nota geral sobre efeitos</span>
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-shroom-lightgreen">{t.effectsNoteLabel}</span>
           </div>
           <p className="text-xs md:text-sm text-shroom-cream/70 leading-relaxed font-sans">
-            {COGUMELO_SECTION.effectsNote}
+            {t.effectsNote}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
-            {COGUMELO_SECTION.possibleEffects.map((e, i) => (
+            {t.possibleEffects.map((e, i) => (
               <div key={i} className="flex items-start gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-shroom-green/60 mt-1.5 shrink-0" />
                 <span className="text-[11px] text-shroom-cream/65 font-sans font-light leading-snug">{e}</span>
@@ -159,30 +166,39 @@ export default function CogumeloSection() {
 
       {/* Cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-5 mb-12 md:mb-16">
-        {COGUMELOS_PSILOCIBINOS.map(m => (
-          <MushroomCard key={m.id} m={m} />
+        {mushrooms.map((m, i) => (
+          <MushroomCard
+            key={m.id}
+            m={m}
+            profile={m.profile}
+            description={m.description}
+            care={m.care}
+            expandMore={t.expandMore}
+            expandLess={t.expandLess}
+            expLabels={t.expLabels as { key: string; label: string }[]}
+          />
         ))}
       </div>
 
       {/* Tabela comparativa */}
       <div className="mb-12 md:mb-16">
         <h3 className="text-base md:text-lg font-serif italic text-shroom-cream/90 mb-4 md:mb-5 tracking-wide">
-          Tabela Comparativa
+          {t.tableTitle}
         </h3>
         <p className="text-[10px] font-mono text-shroom-cream/35 mb-3 md:hidden tracking-wide">
-          ← Desliza para ver a tabela completa
+          {t.tableScroll}
         </p>
         <div className="overflow-x-auto rounded-2xl border border-shroom-green/12 table-scroll-mobile">
           <table className="w-full min-w-[580px] text-[10px] md:text-[11px] font-mono">
             <thead>
               <tr className="bg-shroom-night/80 border-b border-shroom-green/15">
-                <th className="text-left py-3 px-4 text-shroom-gold/80 uppercase tracking-[0.12em] font-medium sticky left-0 bg-shroom-night/90">Espécie</th>
-                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">Visual</th>
-                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">Música</th>
-                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">Social</th>
-                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">Reflexivo</th>
-                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">Energético</th>
-                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">Intensidade</th>
+                <th className="text-left py-3 px-4 text-shroom-gold/80 uppercase tracking-[0.12em] font-medium sticky left-0 bg-shroom-night/90">{t.tableHeaders.species}</th>
+                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">{t.tableHeaders.visual}</th>
+                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">{t.tableHeaders.musical}</th>
+                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">{t.tableHeaders.social}</th>
+                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">{t.tableHeaders.reflexivo}</th>
+                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">{t.tableHeaders.energetico}</th>
+                <th className="py-3 px-3 text-shroom-cream/60 uppercase tracking-[0.1em] font-medium whitespace-nowrap">{t.tableHeaders.intensidade}</th>
               </tr>
             </thead>
             <tbody>
@@ -201,7 +217,7 @@ export default function CogumeloSection() {
                     const s = RATING_STYLE[val];
                     return (
                       <td key={vi} className="py-3 px-3 text-center">
-                        <span className={`${s.text} whitespace-nowrap`}>{val}</span>
+                        <span className={`${s.text} whitespace-nowrap`}>{translations[lang].ratingDisplay[val]}</span>
                       </td>
                     );
                   })}
@@ -211,7 +227,7 @@ export default function CogumeloSection() {
           </table>
         </div>
         <p className="text-[10px] text-shroom-cream/35 font-mono mt-3 text-center tracking-wide">
-          Perfis indicativos de carácter cultural e informativo. A experiência real varia significativamente entre indivíduos.
+          {t.tableFooter}
         </p>
       </div>
 
@@ -222,10 +238,10 @@ export default function CogumeloSection() {
         </div>
         <div className="space-y-2.5">
           <h4 className="text-xs font-sans font-bold uppercase tracking-[0.15em] text-shroom-clay">
-            Nota de Responsabilidade
+            {t.responsibilityTitle}
           </h4>
           <div className="space-y-2 text-xs text-shroom-cream/50 leading-relaxed font-sans font-light">
-            {COGUMELO_SECTION.responsibilityNote.map((p, i) => (
+            {t.responsibilityNote.map((p, i) => (
               <p key={i}>{p}</p>
             ))}
           </div>

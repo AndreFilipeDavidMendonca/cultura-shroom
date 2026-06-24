@@ -10,16 +10,10 @@ import shroomLogo from './assets/images/shroom_cultura_logo.jpg';
 // @ts-ignore
 import festivalHero from './assets/images/cultura_shroom_festival_hero_1782048743292.jpg';
 
-import {
-  HERO_CONTENT,
-  MANIFESTO_CONTENT,
-  PILARES_DATA,
-  FUNDADORES_DATA,
-  NOTA_EDUCATIVA,
-  DECLARACAO_MANIFESTO,
-  QUEM_SAO_SHROOMS,
-  SHROOMLAND_CONTENT,
-} from './data';
+import { PILARES_DATA, FUNDADORES_DATA } from './data';
+
+import { useLanguage } from './contexts/LanguageContext';
+import { translations } from './i18n/translations';
 
 import NomenclaturaSection from './components/NomenclaturaSection';
 import CogumeloSection from './components/CogumeloSection';
@@ -38,6 +32,9 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  const { lang, setLang } = useLanguage();
+  const t = translations[lang];
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -50,7 +47,6 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Bloquear scroll do body quando menu mobile aberto
   useEffect(() => {
     document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -86,14 +82,39 @@ export default function App() {
   };
 
   const navLinks = [
-    { id: 'manifesto',    label: 'Manifesto' },
-    { id: 'pilares',      label: 'Pilares' },
-    { id: 'shrooms',      label: 'Os Shrooms' },
-    { id: 'raizes',       label: 'Raízes' },
-    { id: 'nomenclatura', label: 'Glossário' },
-    { id: 'shroomland',   label: 'Shroomland' },
-    { id: 'cogumelo',     label: 'Cogumelo' },
+    { id: 'manifesto',    label: t.nav.manifesto },
+    { id: 'pilares',      label: t.nav.pilares },
+    { id: 'shrooms',      label: t.nav.shrooms },
+    { id: 'raizes',       label: t.nav.raizes },
+    { id: 'nomenclatura', label: t.nav.nomenclatura },
+    { id: 'shroomland',   label: t.nav.shroomland },
+    { id: 'cogumelo',     label: t.nav.cogumelo },
   ];
+
+  // Dados com traduções mescladas
+  const pilares = PILARES_DATA.map((p, i) => ({ ...p, ...t.pilares.data[i] }));
+  const founders = FUNDADORES_DATA.map((f, i) => ({ ...f, ...t.raizes.foundersData[i] }));
+
+  // Seletor PT / EN
+  const LangSwitcher = ({ className = '' }: { className?: string }) => (
+    <div className={`flex items-center gap-1 font-mono text-[10px] tracking-[0.18em] ${className}`}>
+      <button
+        onClick={() => setLang('pt')}
+        className={`px-1.5 py-0.5 rounded transition-colors ${lang === 'pt' ? 'text-shroom-lightgreen font-bold' : 'text-shroom-cream/35 hover:text-shroom-cream/65'}`}
+        aria-label="Português"
+      >
+        PT
+      </button>
+      <span className="text-shroom-cream/20 select-none">|</span>
+      <button
+        onClick={() => setLang('en')}
+        className={`px-1.5 py-0.5 rounded transition-colors ${lang === 'en' ? 'text-shroom-lightgreen font-bold' : 'text-shroom-cream/35 hover:text-shroom-cream/65'}`}
+        aria-label="English"
+      >
+        EN
+      </button>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-shroom-dark text-shroom-cream selection:bg-shroom-green/30 selection:text-shroom-lightgreen relative">
@@ -142,12 +163,12 @@ export default function App() {
                   Cultura Shroom
                 </span>
                 <span className="hidden md:block text-[8px] font-sans tracking-[0.28em] text-shroom-gold/80 uppercase font-light mt-0.5">
-                  Conexão · Tolice · Libertação
+                  {t.logoTagline}
                 </span>
               </div>
             </div>
 
-            {/* Nav desktop — encostada à direita */}
+            {/* Nav desktop */}
             <nav className="hidden lg:flex items-center gap-5 xl:gap-7 text-[10px] font-medium uppercase tracking-[0.16em] font-sans text-shroom-cream/60">
               {navLinks.map((l) => (
                 <button
@@ -160,8 +181,14 @@ export default function App() {
               ))}
             </nav>
 
-            {/* Hamburger mobile */}
-            <div className="lg:hidden">
+            {/* Seletor de idioma — desktop */}
+            <div className="hidden lg:flex items-center gap-3">
+              <LangSwitcher />
+            </div>
+
+            {/* Hamburger + lang mobile */}
+            <div className="lg:hidden flex items-center gap-2">
+              <LangSwitcher />
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="text-shroom-cream hover:text-shroom-lightgreen p-2 transition-colors rounded-full hover:bg-shroom-green/10"
@@ -179,7 +206,6 @@ export default function App() {
         <div className="fixed inset-0 z-30 bg-shroom-night/98 backdrop-blur-xl flex flex-col justify-center items-center animate-in fade-in duration-200">
           <Spores count={10} />
 
-          {/* Fechar */}
           <button
             onClick={() => setMobileMenuOpen(false)}
             className="absolute top-5 right-5 text-shroom-cream/60 hover:text-shroom-lightgreen p-2 rounded-full hover:bg-shroom-green/10 transition-colors"
@@ -188,7 +214,6 @@ export default function App() {
             <X className="w-6 h-6" />
           </button>
 
-          {/* Logo no topo do menu */}
           <div className="mb-8 relative z-10">
             <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-shroom-gold/50 mx-auto">
               <img src={shroomLogo} alt="Cultura Shroom" className="w-full h-full object-cover" />
@@ -207,13 +232,13 @@ export default function App() {
             ))}
           </nav>
 
-          <div className="mt-8 relative z-10">
+          <div className="mt-8 relative z-10 flex flex-col items-center gap-4">
             <button
               onClick={() => scrollToSection('shroomland')}
               className="btn-shroom px-7 py-3 font-semibold text-xs tracking-widest uppercase flex items-center gap-2 font-sans"
             >
               <Compass className="w-4 h-4" />
-              Entrar em Shroomland
+              {t.hero.primaryBtn}
             </button>
           </div>
         </div>
@@ -237,25 +262,24 @@ export default function App() {
 
         <div className="max-w-7xl mx-auto px-5 md:px-8 w-full relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
-          {/* Texto hero */}
           <div className="lg:col-span-7 space-y-5 text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-shroom-green/10 border border-shroom-green/30 w-max backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-shroom-green animate-pulse shadow-[0_0_8px_var(--color-shroom-green)]" />
-              <span className="text-[9px] md:text-[10px] font-sans tracking-[0.2em] text-shroom-lightgreen uppercase font-bold">Movimento Cultural Vivo</span>
+              <span className="text-[9px] md:text-[10px] font-sans tracking-[0.2em] text-shroom-lightgreen uppercase font-bold">{t.hero.badge}</span>
             </div>
 
             <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.2rem] leading-[0.95] glow-text italic font-light text-shroom-cream">
-              Liberdade,<br />
-              <span className="font-semibold not-italic bg-gradient-to-r from-shroom-lightgold via-shroom-gold to-shroom-amber bg-clip-text text-transparent">Trance &amp;</span><br />
-              Humor.
+              {t.hero.headingLine1}<br />
+              <span className="font-semibold not-italic bg-gradient-to-r from-shroom-lightgold via-shroom-gold to-shroom-amber bg-clip-text text-transparent">{t.hero.headingLine2}</span><br />
+              {t.hero.headingLine3}
             </h1>
 
             <p className="text-base md:text-xl font-serif italic text-shroom-beige/90 tracking-wide leading-relaxed max-w-2xl">
-              {HERO_CONTENT.subtitle}
+              {t.hero.subtitle}
             </p>
 
             <p className="text-sm text-shroom-cream/55 font-light max-w-xl leading-relaxed tracking-wide hidden sm:block">
-              {HERO_CONTENT.tagline}
+              {t.hero.tagline}
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
@@ -263,7 +287,7 @@ export default function App() {
                 onClick={() => scrollToSection('shroomland')}
                 className="btn-shroom px-6 py-3.5 font-semibold text-xs uppercase tracking-[0.14em] font-sans flex items-center justify-center gap-2 cursor-pointer"
               >
-                Entrar em Shroomland
+                {t.hero.primaryBtn}
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
@@ -271,12 +295,11 @@ export default function App() {
                 className="btn-ghost px-6 py-3.5 text-xs uppercase tracking-[0.14em] font-sans flex items-center justify-center gap-2 cursor-pointer"
               >
                 <BookOpen className="w-4 h-4 text-shroom-gold" />
-                Shroom Glossário
+                {t.hero.secondaryBtn}
               </button>
             </div>
           </div>
 
-          {/* Logo — oculto em mobile pequeno, visível a partir de sm */}
           <div className="lg:col-span-5 flex justify-center items-center mt-4 lg:mt-0">
             <div className="relative w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-[22rem] lg:h-[22rem] group">
               <div className="absolute -inset-6 rounded-full border border-shroom-green/12 group-hover:border-shroom-green/25 animate-spin-slow pointer-events-none transition-all duration-500" />
@@ -297,7 +320,7 @@ export default function App() {
           onClick={() => scrollToSection('manifesto')}
           className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 cursor-pointer text-shroom-cream/40 hover:text-shroom-lightgreen transition-colors flex flex-col items-center gap-1"
         >
-          <span className="text-[8px] font-mono tracking-[0.3em] uppercase">Os Shrooms chamam</span>
+          <span className="text-[8px] font-mono tracking-[0.3em] uppercase">{t.hero.scrollLabel}</span>
           <ArrowDown className="w-4 h-4 animate-bounce" />
         </div>
 
@@ -314,7 +337,6 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-5 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
 
-            {/* Logo institucional — menor em mobile */}
             <div className="lg:col-span-4 flex justify-center">
               <div className="relative w-48 h-48 sm:w-60 sm:h-60 lg:w-64 lg:h-64 group">
                 <div className="absolute -inset-4 rounded-full border border-shroom-gold/12 animate-spin-slow pointer-events-none" />
@@ -325,26 +347,25 @@ export default function App() {
               </div>
             </div>
 
-            {/* Texto */}
             <div className="lg:col-span-8 space-y-5">
 
               <SectionTag>
                 <Sprout className="w-3.5 h-3.5" />
-                Manifesto
+                {t.manifesto.sectionTag}
               </SectionTag>
 
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic text-shroom-cream tracking-wide leading-tight">
-                {MANIFESTO_CONTENT.title}
+                {t.manifesto.title}
               </h2>
 
               <div className="space-y-3.5 text-shroom-cream/75 font-light text-sm md:text-base leading-relaxed font-sans">
-                {MANIFESTO_CONTENT.paragraphs.map((p, idx) => (
+                {t.manifesto.paragraphs.map((p, idx) => (
                   <p key={idx}>{p}</p>
                 ))}
               </div>
 
               <div className="space-y-2 pt-1">
-                {MANIFESTO_CONTENT.closing.map((line, idx) => (
+                {t.manifesto.closing.map((line, idx) => (
                   <div key={idx} className="flex items-start gap-2.5">
                     <span className="w-2 h-2 rounded-full bg-shroom-green mt-1.5 shrink-0 animate-pulse" style={{ animationDelay: `${idx * 0.4}s` }} />
                     <p className="text-sm font-serif italic text-shroom-beige/90">{line}</p>
@@ -355,7 +376,7 @@ export default function App() {
               <div className="p-4 md:p-5 organic-card glass border-l-4 border-l-shroom-green relative overflow-hidden">
                 <Mushroom className="absolute -right-2 -bottom-3 w-14 h-16 opacity-15" capColor="var(--color-shroom-moss)" />
                 <p className="text-sm md:text-base font-serif text-shroom-lightgreen italic font-light relative z-10">
-                  "{MANIFESTO_CONTENT.quote}"
+                  "{t.manifesto.quote}"
                 </p>
               </div>
 
@@ -372,18 +393,18 @@ export default function App() {
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14 space-y-3">
             <SectionTag>
               <Landmark className="w-3.5 h-3.5" />
-              Os Pilares
+              {t.pilares.sectionTag}
             </SectionTag>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic text-shroom-cream tracking-wide leading-tight">
-              Sustentáculos do Micélio
+              {t.pilares.title}
             </h2>
             <p className="text-sm text-shroom-cream/55 font-light font-sans">
-              Os princípios que os Shrooms reconhecem como alicerces da Cultura Shroom.
+              {t.pilares.subtitle}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
-            {PILARES_DATA.map((pilar) => (
+            {pilares.map((pilar) => (
               <div
                 key={pilar.id}
                 className="p-5 md:p-6 organic-card glass border border-shroom-green/10 hover:border-shroom-green/35 hover:-translate-y-1 transition-all duration-500 flex flex-col justify-between min-h-[240px] md:min-h-[280px] shadow-lg group relative overflow-hidden"
@@ -404,7 +425,7 @@ export default function App() {
                 </div>
 
                 <div className="flex items-center gap-1.5 pt-3 text-[9px] font-mono uppercase tracking-[0.2em] text-shroom-green/70 relative z-10">
-                  <span>Pilar Shroom</span>
+                  <span>{t.pilares.pillarFooter}</span>
                   <span className="w-1 h-1 rounded-full bg-shroom-green inline-block animate-pulse" />
                 </div>
               </div>
@@ -424,20 +445,20 @@ export default function App() {
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14 space-y-3">
             <SectionTag>
               <Users className="w-3.5 h-3.5" />
-              A Shroomunidade
+              {t.shrooms.sectionTag}
             </SectionTag>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic text-shroom-cream tracking-wide leading-tight">
-              {QUEM_SAO_SHROOMS.title}
+              {t.shrooms.title}
             </h2>
             <p className="text-sm text-shroom-cream/55 font-light font-sans">
-              {QUEM_SAO_SHROOMS.intro}
+              {t.shrooms.intro}
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-start">
 
             <div className="space-y-4">
-              {QUEM_SAO_SHROOMS.paragraphs.map((p, idx) => (
+              {t.shrooms.paragraphs.map((p, idx) => (
                 <p key={idx} className="text-sm md:text-base text-shroom-cream/75 font-light leading-relaxed font-sans">
                   {p}
                 </p>
@@ -448,13 +469,13 @@ export default function App() {
                   className="btn-shroom px-5 py-2.5 font-semibold text-[11px] uppercase tracking-[0.13em] font-sans flex items-center gap-2 cursor-pointer w-full sm:w-auto justify-center sm:justify-start"
                 >
                   <TreePine className="w-4 h-4" />
-                  Ver as Raízes
+                  {t.shrooms.rootsBtn}
                 </button>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {QUEM_SAO_SHROOMS.types.map((type, idx) => (
+              {t.shrooms.types.map((type, idx) => (
                 <div
                   key={idx}
                   className="p-4 organic-card glass border border-shroom-green/12 hover:border-shroom-green/30 transition-all duration-300 group"
@@ -490,18 +511,18 @@ export default function App() {
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14 space-y-3">
             <SectionTag>
               <TreePine className="w-3.5 h-3.5" />
-              As Raízes
+              {t.raizes.sectionTag}
             </SectionTag>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic text-shroom-cream tracking-wide leading-tight">
-              Primeiras Raízes do Micélio
+              {t.raizes.title}
             </h2>
             <p className="text-sm text-shroom-cream/60 font-light font-sans">
-              As raízes da Cultura Shroom nascem dos primeiros Shrooms fundadores. São eles que deram forma inicial ao micélio simbólico da Shroomunidade.
+              {t.raizes.subtitle}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-5">
-            {FUNDADORES_DATA.map((founder, idx) => {
+            {founders.map((founder, idx) => {
               const emojis = ["🦁", "🦋", "🌙", "🐒", "🌿"];
               return (
                 <div
@@ -537,7 +558,7 @@ export default function App() {
           </div>
 
           <p className="text-center text-sm text-shroom-cream/45 font-serif italic mt-8 md:mt-10 max-w-2xl mx-auto px-4">
-            As Raízes representam a origem afetiva, criativa e comunitária da Cultura Shroom. A partir delas, a Shroomunidade cresce como micélio: de forma orgânica, invisível, coletiva e viva.
+            {t.raizes.footer}
           </p>
 
         </div>
@@ -550,13 +571,13 @@ export default function App() {
           <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14 space-y-3">
             <SectionTag>
               <BookOpen className="w-3.5 h-3.5" />
-              O Dicionário
+              {t.glossario.sectionTag}
             </SectionTag>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic text-shroom-cream tracking-wide leading-tight">
-              Shroom Glossário
+              {t.glossario.title}
             </h2>
             <p className="text-sm text-shroom-cream/55 font-light font-sans leading-relaxed">
-              Os termos e nomenclaturas criados no interior da Shroomunidade.
+              {t.glossario.subtitle}
             </p>
           </div>
 
@@ -574,7 +595,6 @@ export default function App() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
-            {/* Logo */}
             <div className="flex justify-center order-2 lg:order-1">
               <div className="relative w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 group">
                 <div className="absolute -inset-6 rounded-full border border-shroom-green/12 animate-spin-slow pointer-events-none" />
@@ -587,26 +607,25 @@ export default function App() {
               </div>
             </div>
 
-            {/* Texto */}
             <div className="space-y-5 order-1 lg:order-2">
 
               <SectionTag>
                 <MapPin className="w-3.5 h-3.5" />
-                O Território Simbólico
+                {t.shroomland.sectionTag}
               </SectionTag>
 
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif italic text-shroom-cream tracking-wide leading-tight">
-                {SHROOMLAND_CONTENT.title}
+                {t.shroomland.title}
               </h2>
 
               <div className="space-y-3.5 text-shroom-cream/75 font-light text-sm md:text-base leading-relaxed font-sans">
-                {SHROOMLAND_CONTENT.paragraphs.map((p, idx) => (
+                {t.shroomland.paragraphs.map((p, idx) => (
                   <p key={idx}>{p}</p>
                 ))}
               </div>
 
               <div className="space-y-2.5 pt-1">
-                {SHROOMLAND_CONTENT.values.map((value, idx) => (
+                {t.shroomland.values.map((value, idx) => (
                   <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-shroom-forest/20 border border-shroom-green/10 hover:border-shroom-green/25 transition-colors">
                     <CheckCircle2 className="w-4 h-4 text-shroom-green shrink-0" />
                     <span className="text-sm font-serif italic text-shroom-beige/90">{value}</span>
@@ -620,20 +639,19 @@ export default function App() {
                   className="btn-shroom px-5 py-3 font-semibold text-xs uppercase tracking-[0.13em] font-sans flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Sparkles className="w-4 h-4" />
-                  Escolher um Cogumelo
+                  {t.shroomland.primaryBtn}
                 </button>
                 <button
                   onClick={() => scrollToSection('nomenclatura')}
                   className="btn-ghost px-5 py-3 text-xs uppercase tracking-[0.13em] font-sans flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <BookOpen className="w-4 h-4 text-shroom-gold" />
-                  Explorar o Glossário
+                  {t.shroomland.secondaryBtn}
                 </button>
               </div>
 
             </div>
           </div>
-
 
         </div>
       </ScrollAnimate>
@@ -658,11 +676,11 @@ export default function App() {
           </div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-serif italic text-shroom-cream leading-tight">
-            {DECLARACAO_MANIFESTO.title}
+            {t.declaracao.title}
           </h2>
 
           <p className="text-sm md:text-base lg:text-lg text-shroom-beige/85 font-light leading-relaxed font-serif italic">
-            "{DECLARACAO_MANIFESTO.text}"
+            "{t.declaracao.text}"
           </p>
 
           <div className="pt-2">
@@ -671,14 +689,14 @@ export default function App() {
               className="btn-shroom px-7 md:px-9 py-3.5 md:py-4 font-semibold text-xs tracking-[0.15em] uppercase font-sans flex items-center gap-2 mx-auto cursor-pointer"
             >
               <Compass className="w-4 h-4 md:w-5 md:h-5 animate-spin-slow" />
-              {DECLARACAO_MANIFESTO.buttonText}
+              {t.declaracao.buttonText}
             </button>
           </div>
 
         </div>
       </ScrollAnimate>
 
-      {/* ═══════════ 11. NOTA DE RESPONSABILIDADE ═══════════ */}
+      {/* ═══════════ 10. NOTA DE RESPONSABILIDADE ═══════════ */}
       <ScrollAnimate as="section" id="educativo" className="py-8 md:py-10 bg-shroom-night/80 border-t border-shroom-earth/15">
         <div className="max-w-3xl mx-auto px-5">
           <div className="p-4 md:p-6 rounded-2xl bg-shroom-deep/50 border border-shroom-earth/20 flex flex-col sm:flex-row gap-4 items-start">
@@ -687,10 +705,10 @@ export default function App() {
             </div>
             <div className="space-y-2">
               <h3 className="text-xs font-sans font-bold uppercase tracking-[0.15em] text-shroom-clay">
-                {NOTA_EDUCATIVA.title}
+                {t.notaEducativa.title}
               </h3>
               <div className="space-y-2 font-sans font-light text-shroom-cream/40 text-xs leading-relaxed">
-                {NOTA_EDUCATIVA.paragraphs.map((p, idx) => (
+                {t.notaEducativa.paragraphs.map((p, idx) => (
                   <p key={idx}>{p}</p>
                 ))}
               </div>
@@ -716,18 +734,18 @@ export default function App() {
             </div>
             <div className="text-left">
               <span className="text-base md:text-lg font-serif italic text-shroom-cream tracking-[0.12em] uppercase">Cultura Shroom</span>
-              <p className="text-[10px] text-shroom-gold/70 font-sans tracking-[0.2em] mt-0.5 uppercase">Conexão · Tolice · Libertação</p>
+              <p className="text-[10px] text-shroom-gold/70 font-sans tracking-[0.2em] mt-0.5 uppercase">{t.logoTagline}</p>
             </div>
           </div>
 
           <div className="text-center font-sans font-light order-3 md:order-2">
-            <p>© 2026 Cultura Shroom. Todos os direitos reservados do micélio coletivo.</p>
-            <p className="text-[10px] text-shroom-cream/28 mt-1 uppercase tracking-[0.2em]">Confraria de Arte, Trance e Humor Simbólico.</p>
+            <p>{t.footer.copyright}</p>
+            <p className="text-[10px] text-shroom-cream/28 mt-1 uppercase tracking-[0.2em]">{t.footer.subtitle}</p>
           </div>
 
           <div className="flex items-center gap-2 bg-shroom-green/8 px-3 py-1.5 rounded-full border border-shroom-green/20 font-mono text-[9px] uppercase tracking-[0.15em] text-shroom-lightgreen/80 order-2 md:order-3">
             <span className="w-1.5 h-1.5 bg-shroom-green rounded-full animate-pulse" />
-            <span>Shroomunidade Ativa</span>
+            <span>{t.footer.status}</span>
           </div>
 
         </div>
