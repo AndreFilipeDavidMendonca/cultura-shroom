@@ -95,24 +95,72 @@ export default function App() {
   const pilares = PILARES_DATA.map((p, i) => ({ ...p, ...t.pilares.data[i] }));
   const founders = FUNDADORES_DATA.map((f, i) => ({ ...f, ...t.raizes.foundersData[i] }));
 
-  // Seletor PT / EN
-  const LangSwitcher = ({ className = '' }: { className?: string }) => (
-    <div className={`flex items-center gap-1 font-mono text-[10px] tracking-[0.18em] ${className}`}>
+  // Seletor de idioma — header (desktop + mobile)
+  const LangSwitcher = () => (
+    <div
+      className="flex items-center gap-0.5 rounded-full border border-shroom-green/25 bg-shroom-night/60 backdrop-blur-sm p-1 shadow-[0_0_12px_-4px_rgba(94,168,69,0.3)]"
+      role="group"
+      aria-label="Idioma / Language"
+    >
+      <Globe className="w-3 h-3 text-shroom-gold/60 ml-1 mr-0.5 shrink-0" />
       <button
         onClick={() => setLang('pt')}
-        className={`px-1.5 py-0.5 rounded transition-colors ${lang === 'pt' ? 'text-shroom-lightgreen font-bold' : 'text-shroom-cream/35 hover:text-shroom-cream/65'}`}
         aria-label="Português"
+        aria-pressed={lang === 'pt'}
+        className={`px-2.5 py-1 rounded-full text-[10px] font-mono tracking-[0.14em] font-semibold transition-all duration-200 ${
+          lang === 'pt'
+            ? 'bg-shroom-green/30 text-shroom-lightgreen shadow-[0_0_8px_-2px_rgba(94,168,69,0.5)] border border-shroom-green/40'
+            : 'text-shroom-cream/45 hover:text-shroom-cream/80 hover:bg-shroom-green/10'
+        }`}
       >
         PT
       </button>
-      <span className="text-shroom-cream/20 select-none">|</span>
       <button
         onClick={() => setLang('en')}
-        className={`px-1.5 py-0.5 rounded transition-colors ${lang === 'en' ? 'text-shroom-lightgreen font-bold' : 'text-shroom-cream/35 hover:text-shroom-cream/65'}`}
         aria-label="English"
+        aria-pressed={lang === 'en'}
+        className={`px-2.5 py-1 rounded-full text-[10px] font-mono tracking-[0.14em] font-semibold transition-all duration-200 ${
+          lang === 'en'
+            ? 'bg-shroom-green/30 text-shroom-lightgreen shadow-[0_0_8px_-2px_rgba(94,168,69,0.5)] border border-shroom-green/40'
+            : 'text-shroom-cream/45 hover:text-shroom-cream/80 hover:bg-shroom-green/10'
+        }`}
       >
         EN
       </button>
+    </div>
+  );
+
+  // Seletor de idioma expandido — dentro do menu mobile
+  const LangSwitcherMenu = () => (
+    <div className="flex flex-col items-center gap-3 relative z-10 mt-2">
+      <div className="flex items-center gap-1.5 text-[9px] font-mono tracking-[0.22em] text-shroom-cream/35 uppercase">
+        <Globe className="w-3 h-3" />
+        <span>{lang === 'pt' ? 'Idioma' : 'Language'}</span>
+      </div>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => setLang('pt')}
+          aria-pressed={lang === 'pt'}
+          className={`px-5 py-2 rounded-full text-sm font-sans tracking-wide border transition-all duration-200 ${
+            lang === 'pt'
+              ? 'bg-shroom-green/20 border-shroom-green/55 text-shroom-lightgreen font-semibold shadow-[0_0_14px_-4px_rgba(94,168,69,0.5)]'
+              : 'border-shroom-cream/15 text-shroom-cream/45 hover:border-shroom-green/30 hover:text-shroom-cream/70'
+          }`}
+        >
+          Português
+        </button>
+        <button
+          onClick={() => setLang('en')}
+          aria-pressed={lang === 'en'}
+          className={`px-5 py-2 rounded-full text-sm font-sans tracking-wide border transition-all duration-200 ${
+            lang === 'en'
+              ? 'bg-shroom-green/20 border-shroom-green/55 text-shroom-lightgreen font-semibold shadow-[0_0_14px_-4px_rgba(94,168,69,0.5)]'
+              : 'border-shroom-cream/15 text-shroom-cream/45 hover:border-shroom-green/30 hover:text-shroom-cream/70'
+          }`}
+        >
+          English
+        </button>
+      </div>
     </div>
   );
 
@@ -182,11 +230,11 @@ export default function App() {
             </nav>
 
             {/* Seletor de idioma — desktop */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center">
               <LangSwitcher />
             </div>
 
-            {/* Hamburger + lang mobile */}
+            {/* Hamburger mobile (seletor de idioma fica no menu overlay) */}
             <div className="lg:hidden flex items-center gap-2">
               <LangSwitcher />
               <button
@@ -232,7 +280,13 @@ export default function App() {
             ))}
           </nav>
 
-          <div className="mt-8 relative z-10 flex flex-col items-center gap-4">
+          <div className="mt-6 w-full px-8 relative z-10">
+            <div className="border-t border-shroom-green/10 pt-5">
+              <LangSwitcherMenu />
+            </div>
+          </div>
+
+          <div className="mt-6 relative z-10 flex flex-col items-center gap-4">
             <button
               onClick={() => scrollToSection('shroomland')}
               className="btn-shroom px-7 py-3 font-semibold text-xs tracking-widest uppercase flex items-center gap-2 font-sans"
