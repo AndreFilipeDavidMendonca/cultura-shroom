@@ -4,7 +4,7 @@ import { RatingLevel } from '../data';
 
 interface PilarTranslation { title: string; description: string; }
 interface FounderTranslation { role: string; description: string; vibe: string; }
-interface NomenclaturaTranslation { definition: string; }
+interface NomenclaturaTranslation { term?: string; definition: string; }
 interface CogumeloTranslation { profile: string; description: string; care: string; }
 interface ExpLabel { key: string; label: string; }
 
@@ -340,7 +340,7 @@ export const translations = {
       closing: [
         'In Shroomland, freedom does not dispense with respect.',
         'On the Shroomfloor, the body speaks.',
-        'In the Shroomunidade, every Shroom finds their place.',
+        'In the Shroomunity, every Shroom finds their place.',
       ],
       quote: 'The Shrooms speak in the third person because the Shroom observes itself existing.',
     },
@@ -368,12 +368,12 @@ export const translations = {
           description: 'On the Shroomfloor, the Shroom sets the body free. Dance is not competition. Dance is expression, presence, and liberation. The body ceases to be an object of judgement and becomes a vehicle of pure vibration.',
         },
         {
-          title: 'Shroomocracia and Respect',
-          description: 'Shroomocracia represents the symbolic form of Shroom organization: participation, listening, respect, and collective goodwill. Individual freedom coexists with care for the other.',
+          title: 'Shroomocracy and Respect',
+          description: 'Shroomocracy represents the symbolic form of Shroom organization: participation, listening, respect, and collective goodwill. Individual freedom coexists with care for the other.',
         },
         {
           title: 'Humour as Social Healing',
-          description: 'The Shrooms recognize laughter as a tool of healing, closeness, and deconstruction. Laughing together creates Shroomunidade. Laughing at oneself is the definitive passport to lightness.',
+          description: 'The Shrooms recognize laughter as a tool of healing, closeness, and deconstruction. Laughing together creates Shroomunity. Laughing at oneself is the definitive passport to lightness.',
         },
         {
           title: 'Good Heart and Mutual Care',
@@ -383,22 +383,22 @@ export const translations = {
     },
 
     shrooms: {
-      sectionTag: 'The Shroomunidade',
+      sectionTag: 'The Shroomunity',
       title:      'Who Are the Shrooms',
       intro:      'The Shrooms are participants in a symbolic, musical, and communal culture.',
       paragraphs: [
-        'The Shroom can be whoever dances, whoever laughs, whoever watches, whoever cares, whoever loses themselves for a moment and finds their way again through music, nature, and Shroompanhia.',
+        'The Shroom can be whoever dances, whoever laughs, whoever watches, whoever cares, whoever loses themselves for a moment and finds their way again through music, nature, and Shroompany.',
         'The Shrooms require no status, no appearance, no prominence. Each Shroom participates in their own way.',
-        'There are animated Shrooms, calm Shrooms, shroomalhado Shrooms, anonymous Shrooms, founding Shrooms, and Shrooms still discovering their place in Shroomland.',
+        'There are Shroom Energized, Shroom Serene, Shroomfused, Shroomonymous, Shroom Founders, and Shrooms still discovering their place in Shroomland.',
         'What unites the Shrooms is the desire to live with more freedom, respect, humour, presence, and good heart.',
       ],
       types: [
-        { label: 'Shroom Animado',       desc: 'Dancefloor energy, easy laughter, and an unstoppable will to move.' },
-        { label: 'Shroom Calmo',         desc: 'A quiet presence and stabilizing energy within the Shroomunidade.' },
-        { label: 'Shroomalhado',         desc: 'Slightly adrift in the cosmos, but spiritually on the right path.' },
-        { label: 'Shroomanónimo',        desc: 'Arrives, spreads good energy, and contributes without needing the spotlight.' },
-        { label: 'Shroom Fundador',      desc: 'One of the roots of the mycelium. Gave shape to the Shroomunidade.' },
-        { label: 'Shroom em Descoberta', desc: 'Still finding their place in Shroomland. Welcome.' },
+        { label: 'Shroom Energized',      desc: 'Dancefloor energy, easy laughter, and an unstoppable will to move.' },
+        { label: 'Shroom Serene',         desc: 'A quiet presence and stabilizing energy within the Shroomunity.' },
+        { label: 'Shroomfused',           desc: 'Slightly adrift in the cosmos, but spiritually on the right path.' },
+        { label: 'Shroomonymous',         desc: 'Arrives, spreads good energy, and contributes without needing the spotlight.' },
+        { label: 'Shroom Founder',        desc: 'One of the roots of the mycelium. Gave shape to the Shroomunity.' },
+        { label: 'Shroom in Discovery',   desc: 'Still finding their place in Shroomland. Welcome.' },
       ],
       rootsBtn: 'See the Roots',
     },
@@ -406,13 +406,13 @@ export const translations = {
     raizes: {
       sectionTag: 'The Roots',
       title:      'First Roots of the Mycelium',
-      subtitle:   'The roots of Cultura Shroom grow from the first founding Shrooms. They gave initial shape to the symbolic mycelium of the Shroomunidade.',
-      footer:     'The Roots represent the affective, creative, and communal origins of Cultura Shroom. From them, the Shroomunidade grows like mycelium: organically, invisibly, collectively, and alive.',
+      subtitle:   'The roots of Cultura Shroom grow from the first founding Shrooms. They gave initial shape to the symbolic mycelium of the Shroomunity.',
+      footer:     'The Roots represent the affective, creative, and communal origins of Cultura Shroom. From them, the Shroomunity grows like mycelium: organically, invisibly, collectively, and alive.',
       foundersData: [
         { role: 'Primordial Root',       description: 'Architect of frequencies who initiated the first underground exchanges of this mycelium. The Shrooms recognize in TóShroom the vibration that set everything in motion.',                                                                      vibe: 'Rhythm Alchemist'    },
-        { role: 'Weaver of Connections', description: 'Guardian of the Shroomunidade\'s cultural soil. NelShroom ensures that collective energy flows with empathy, care, and good spirit among the Shrooms.',                                                                               vibe: 'Compass of Light'    },
+        { role: 'Weaver of Connections', description: 'Guardian of the Shroomunity\'s cultural soil. NelShroom ensures that collective energy flows with empathy, care, and good spirit among the Shrooms.',                                                                               vibe: 'Compass of Light'    },
         { role: 'Stellar Beacon',        description: 'Rhythmic visionary and master of visual design. MimShroom draws the geometries that clothe and adorn Shroomland with elegance and soul.',                                                                                             vibe: 'Decoder of Forms'    },
-        { role: 'Catalyst of Laughter',  description: 'Guardian of absurd laughter and of Shroomocracia. ZéShroom reminds the Shrooms that being silly is a noble art of cosmic rebellion against social rigidity.',                                                                        vibe: 'Suspension of Gravity'},
+        { role: 'Catalyst of Laughter',  description: 'Guardian of absurd laughter and of Shroomocracy. ZéShroom reminds the Shrooms that being silly is a noble art of cosmic rebellion against social rigidity.',                                                                       vibe: 'Suspension of Gravity'},
         { role: 'Organic Nutrient',      description: 'The wild essence of the forest. SalpicãoShroom nourishes the festivities and maintains the Shrooms\' connection to nature — raw, pure, and untamed.',                                                                               vibe: 'Silvery Fire'        },
       ] as FounderTranslation[],
     },
@@ -420,7 +420,7 @@ export const translations = {
     glossario: {
       sectionTag: 'The Dictionary',
       title:      'Shroom Glossary',
-      subtitle:   'The terms and nomenclature created within the Shroomunidade.',
+      subtitle:   'The terms and nomenclature created within the Shroomunity.',
       vocabLabel: 'Shroom Vocabulary',
       cardFooter: 'Symbol of togetherness, humour, and organic connection.',
       shroomifier: {
@@ -433,16 +433,16 @@ export const translations = {
         emptyOutput:       'Awaiting underground mycelium encoding…',
       },
       data: [
-        { definition: 'Symbolic model of communal organization based on participation, respect, listening, and collective goodwill. The Shrooms organize themselves with lightness, not rigidity.' },
-        { definition: 'The symbolic territory where Cultura Shroom takes form. It can be a party, a dancefloor, a forest, a community, or any place where Shroom values are present.' },
-        { definition: 'The physical or symbolic space of dance. It is where the Shroom sets the body free, finds the music, and expresses without judgement. An altar of movement and presence.' },
-        { definition: 'The sacred period of gathering, celebration, and togetherness for the Shrooms. The moment when the Shroomunidade reunites to dance, laugh, and share human warmth.' },
-        { definition: 'A state of preparation, creative chaos, and accumulated energy before or during a great Shroom celebration. Not destruction — the collective explosion of good spirit.' },
-        { definition: 'A Shroom who participates, spreads good energy, and contributes to the Shroomunidade without seeking prominence, status, or the spotlight. The most humble and most essential figure.' },
-        { definition: 'The symbolic price list or table of values in Cultura Shroom, when it exists. The Shrooms know what is worth it and what is not.' },
-        { definition: 'A real or symbolic space of hydration, togetherness, and philosophical encounters at the counter. The Shroombar is where Shrooms share stories between frequencies.' },
-        { definition: 'A state of cosmic confusion, temporary misalignment, or mild loss of direction — usually accompanied by good humour. The Shroom knows the way will be found again.' },
-        { definition: 'A state of elevated energy, dance, laughter, and active participation. The Shroom Animado is contagious, joyful, and incapable of staying still when the music calls.' },
+        { term: 'Shroomocracy',  definition: 'Symbolic model of communal organization based on participation, respect, listening, and collective goodwill. The Shrooms organize themselves with lightness, not rigidity.' },
+        {                        definition: 'The symbolic territory where Cultura Shroom takes form. It can be a party, a dancefloor, a forest, a community, or any place where Shroom values are present.' },
+        {                        definition: 'The physical or symbolic space of dance. It is where the Shroom sets the body free, finds the music, and expresses without judgement. An altar of movement and presence.' },
+        {                        definition: 'The sacred period of gathering, celebration, and togetherness for the Shrooms. The moment when the Shroomunity reunites to dance, laugh, and share human warmth.' },
+        {                        definition: 'A state of preparation, creative chaos, and accumulated energy before or during a great Shroom celebration. Not destruction — the collective explosion of good spirit.' },
+        { term: 'Shroomonymous', definition: 'A Shroom who participates, spreads good energy, and contributes to the Shroomunity without seeking prominence, status, or the spotlight. The most humble and most essential figure.' },
+        { term: 'Shroom Pricing', definition: 'The symbolic price list or table of values in Cultura Shroom, when it exists. The Shrooms know what is worth it and what is not.' },
+        {                        definition: 'A real or symbolic space of hydration, togetherness, and philosophical encounters at the counter. The Shroombar is where Shrooms share stories between frequencies.' },
+        { term: 'Shroomfused',   definition: 'A state of cosmic confusion, temporary misalignment, or mild loss of direction — usually accompanied by good humour. The Shroom knows the way will be found again.' },
+        { term: 'Shroom Energized', definition: 'A state of elevated energy, dance, laughter, and active participation. The Shroom Energized is contagious, joyful, and incapable of staying still when the music calls.' },
       ] as NomenclaturaTranslation[],
     },
 
@@ -519,7 +519,7 @@ export const translations = {
         {
           profile: 'One of the most widely known species in the contemporary psychedelic world. Often associated with a balanced experience, blending visual alterations, laughter, introspection, and musical sensitivity.',
           description: 'The experience associated with Psilocybe cubensis is often described as accessible, symbolic, and emotionally variable. It may bring lightness, laughter, and sensitivity to music — but can also turn introspective or uncomfortable depending on context.',
-          care: 'The Shroom observes this species as one of the most recognized symbols of the contemporary psychedelic world. The Shroomunidade values awareness, care, and respect.',
+          care: 'The Shroom observes this species as one of the most recognized symbols of the contemporary psychedelic world. The Shroomunity values awareness, care, and respect.',
         },
         {
           profile: 'A well-known species in temperate regions, often described as naturally potent with a marked mental profile.',
@@ -529,7 +529,7 @@ export const translations = {
         {
           profile: 'A species known for its potency and more pronounced visual profile. Music and the surrounding environment take on additional dimensions.',
           description: 'The experience associated with Psilocybe cyanescens can be visually intense, with patterns, distortions, and a strong sensitivity to surroundings. Music can gain depth and texture. It can also generate confusion or anxiety if the context is not stable.',
-          care: 'The Shroomunidade values awareness and respect. Unstable contexts significantly increase the risk of difficult experiences.',
+          care: 'The Shroomunity values awareness and respect. Unstable contexts significantly increase the risk of difficult experiences.',
         },
         {
           profile: 'Frequently mentioned as one of the most potent species in the Psilocybe genus. Of strong symbolic and sensory charge.',
@@ -544,7 +544,7 @@ export const translations = {
         {
           profile: 'A species historically associated with traditional uses and cultural contexts in Mesoamerica. A cultural and historical reference in the mushroom world.',
           description: 'The experience associated with Psilocybe mexicana is often described in more symbolic, gentle, and introspective terms. The Shroom observes this species as a cultural and historical reference of deep symbolic meaning.',
-          care: 'The Shroomunidade values historical and cultural knowledge. This species is presented in the context of its symbolic and anthropological significance.',
+          care: 'The Shroomunity values historical and cultural knowledge. This species is presented in the context of its symbolic and anthropological significance.',
         },
         {
           profile: 'A species also known through the association with what are culturally discussed as magic truffles. A milder and more reflective profile.',
@@ -556,7 +556,7 @@ export const translations = {
 
     declaracao: {
       title: 'The Shroom Declaration',
-      text: 'Cultura Shroom affirms itself as a community free of prejudice, centered on rhythmic harmony, humour, and respect. The Shrooms defend foolishness as liberation, dance as integrating expression, laughter as mutual healing, music as collective union, and simplicity as poetic resistance to the emptiness of consumerism. To be Shroom is to participate in a network culture where joy needs no permission, freedom does not dispense with the ethics of care, and the Shroomunidade is born of the will to live with more lightness, presence, and good heart.',
+      text: 'Cultura Shroom affirms itself as a community free of prejudice, centered on rhythmic harmony, humour, and respect. The Shrooms defend foolishness as liberation, dance as integrating expression, laughter as mutual healing, music as collective union, and simplicity as poetic resistance to the emptiness of consumerism. To be Shroom is to participate in a network culture where joy needs no permission, freedom does not dispense with the ethics of care, and the Shroomunity is born of the will to live with more lightness, presence, and good heart.',
       buttonText: 'Enter Shroomland',
     },
 
@@ -571,7 +571,7 @@ export const translations = {
     footer: {
       copyright: '© 2026 Cultura Shroom. All rights reserved by the collective mycelium.',
       subtitle:  'Brotherhood of Art, Trance and Symbolic Humour.',
-      status:    'Active Shroomunidade',
+      status:    'Active Shroomunity',
     },
 
     ratingDisplay: {

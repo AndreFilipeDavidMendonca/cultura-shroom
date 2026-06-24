@@ -13,13 +13,15 @@ export default function NomenclaturaSection() {
   const { lang } = useLanguage();
   const t = translations[lang].glossario;
 
-  // Combina dados estruturais (term, vibeColor) com definições traduzidas
+  // Combina dados estruturais com traduções — `term` é a chave interna (sempre PT),
+  // `displayTerm` é o nome exibido (adaptado em EN quando definido)
   const displayData = NOMENCLATURAS_DATA.map((n, i) => ({
     ...n,
+    displayTerm: (t.data[i] as { term?: string; definition: string })?.term ?? n.term,
     definition: t.data[i]?.definition ?? n.definition,
   }));
 
-  const [selectedTerm, setSelectedTerm] = useState(displayData[0].term);
+  const [selectedTerm, setSelectedTerm] = useState(NOMENCLATURAS_DATA[0].term);
   const [inputText, setInputText] = useState('');
   const [shroomifiedText, setShroomifiedText] = useState('');
 
@@ -58,17 +60,17 @@ export default function NomenclaturaSection() {
         .replace(/(chaos|madness|party|celebration|rave)/g, 'Shroomageddon 🔥')
         .replace(/(dancefloor|dance floor|floor|stage)/g, 'Shroomfloor 🎶')
         .replace(/(place|park|nature|festival|space)/g, 'Shroomland 🌲')
-        .replace(/(person|participant|friend|guy|girl|anonymous)/g, 'Shroomanónimo 🕊️')
+        .replace(/(person|participant|friend|guy|girl|anonymous)/g, 'Shroomonymous 🕊️')
         .replace(/(mushrooms|mushroom)/g, 'Shrooms 🍄')
         .replace(/(freedom|free)/g, 'radical freedom ✨')
         .replace(/(music|sound|rhythm|trance)/g, 'Cosmic Trance 🎶')
         .replace(/(talk|speak|chat)/g, 'exchange spores 💬')
         .replace(/(sad|bored|work|stress|stressed)/g, 'consumerist void 🛒')
         .replace(/(bar|counter|beer|drink|drinks)/g, 'Shroombar 🌿')
-        .replace(/(lost|confused)/g, 'shroomalhado 🌀')
-        .replace(/(energetic|excited|hyped|enthusiastic)/g, 'Shroom Animado 🔥')
-        .replace(/(price|cost|list)/g, 'Shroomçário 📋')
-        .replace(/(community|group|clan|tribe)/g, 'Shroomunidade 🍄');
+        .replace(/(lost|confused)/g, 'Shroomfused 🌀')
+        .replace(/(energetic|excited|hyped|enthusiastic)/g, 'Shroom Energized 🔥')
+        .replace(/(price|cost|list)/g, 'Shroom Pricing 📋')
+        .replace(/(community|group|clan|tribe)/g, 'Shroomunity 🍄');
     }
 
     const words = text.split(' ');
@@ -115,7 +117,7 @@ export default function NomenclaturaSection() {
                   : 'bg-shroom-deep/45 text-shroom-cream/50 border-white/5 hover:bg-shroom-deep/80 hover:text-shroom-cream/80'
               }`}
             >
-              {item.term}
+              {item.displayTerm}
             </button>
           ))}
         </div>
@@ -131,7 +133,7 @@ export default function NomenclaturaSection() {
           </div>
 
           <h3 className={`text-2xl md:text-3xl font-display font-semibold mb-3 tracking-wide ${vibe.text}`}>
-            {activeData.term}
+            {activeData.displayTerm}
           </h3>
 
           <p className="text-sm md:text-base text-shroom-cream/90 leading-relaxed max-w-2xl">
